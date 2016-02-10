@@ -1,0 +1,28 @@
+Starting Lexer
+Starting Parser
+Building Symbol Table
+line 108: Redeclaration of identifier `main'
+line 112: Redeclaration of identifier `Main'
+line 115: Redeclaration of identifier `m'
+line 116: Redeclaration of identifier `x'
+
+
+Finished Symbol Table
+
+
+Global Scope: {
+class in08 {
+void t1();
+int five();
+int square(int i);
+string concat(string a, string b);
+string concatN(string s, string a, int copies);
+void vectorAdd(int a[], int b[], int c[], int size);
+}
+class Main {
+void main();
+}
+
+}
+
+End of Symbol Table Builder test

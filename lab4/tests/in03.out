@@ -1,0 +1,25 @@
+Starting Lexer
+Starting Parser
+Building Symbol Table
+
+
+Finished Symbol Table
+
+
+Global Scope: {
+class A {
+int A(int A);
+bool B(int A, bool B);
+char C(int A, bool B, char C);
+string S(int A, bool B, char C, string S);
+}
+class B {
+int A;
+bool B;
+char C;
+string S;
+}
+
+}
+
+End of Symbol Table Builder test
