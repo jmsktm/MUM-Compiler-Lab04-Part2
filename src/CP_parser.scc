@@ -1,0 +1,276 @@
+Helpers
+    all = [0..0xffff];
+    space  = ' ';          
+    lf  = 0x000a; // line feed
+    cr  = 0x000d; // carriage return
+    ff  = 0x000c; // form feed
+    ht  = 0x0009; // tab
+
+    eol = cr | lf | cr lf;
+    not_eol = [all - [cr + lf]];
+    not_star = [all - '*'];
+    not_star_slash = [not_star - '/'];
+
+    valid_string_literal_chars = [not_eol - '"'];
+
+    simple_char_seq = ' ' | '!' | '"' | '#' | '$' | '%' | '&' | '(' | ')' 
+        | '*' | '+' | ',' | '-' | '.' | '/' | ':' | ';' | '<' | '=' | '>' 
+        | '?' | '@' | '[' | ']' | '^' | '_' | '`' | '{' | '|' | '}' | '~'
+        | ['a' .. 'z'] | ['A' .. 'Z'] | ['0' .. '9'];
+    simple_escape_seq = '\\' | '\' ''' | '\n' | '\t' | '\r' | '\b' | '\f' | '\"' ;
+
+    zero = '0';
+    digit = ['0' .. '9'];
+    non_zero_digit = [digit - zero];
+    digit_sequence = digit+;
+
+    decimal = '.';
+    sign = '+' | '-';
+    float_mandatory_prefix_num = digit+ decimal digit*;
+    float_mandatory_suffix_num = digit* decimal digit+;
+    exponent_part = ('e' | 'E') sign? digit_sequence;
+
+    underscore = '_';
+    lower_alpha = ['a' .. 'z'];
+    upper_alpha = ['A' .. 'Z'];
+    numeric = ['0' .. '9'];
+    alpha = [lower_alpha + upper_alpha];
+    alpha_numeric = [alpha + numeric];
+    alpha_underscore = [alpha + underscore];
+    alpha_numeric_underscore = [alpha_numeric + underscore];
+
+States
+    normal;
+
+Tokens
+    comment = 
+        ('//' not_eol* eol) |
+        ('/*' not_star* '*'+ (not_star_slash not_star* '*'+)* '/');
+
+    string_literal = ('"' valid_string_literal_chars* '"');
+    char_literal = (''' simple_char_seq ''');
+    escape_string_literal = ('"' (simple_escape_seq | valid_string_literal_chars)* '"');
+
+    escape = (''' simple_escape_seq ''');
+
+    plus = '+';
+    minus = '-';
+    mult = '*';
+    div = '/';
+    less_than = '<';
+    less_than_or_eq= '<=';
+    greater_than = '>';
+    greater_than_or_eq = '>=';
+    equals = '==';
+    and = '&&';
+    or = '||';
+    not = '!';
+    colon = ':';
+    semicolon = ';';
+    comma = ',';
+    l_par = '(';
+    r_par= ')';
+    l_brace = '{';
+    r_brace = '}';
+    l_bkt= '[';
+    r_bkt= ']';
+    not_equals = '!=';
+    equal_to = '=';
+    pointer = '->';
+    dot = '.';
+    modulo = '%';
+
+    float_lit = ((float_mandatory_prefix_num  | float_mandatory_suffix_num) exponent_part?);
+
+    white_space = (space | ht | ff | eol)*;
+
+    bool = 'bool';
+    break = 'break';
+    char = 'char';
+    const = 'const';
+    continue = 'continue';
+    kclass = 'class';
+    do = 'do';
+    else = 'else';
+    false = 'false';
+    float = 'float';
+    if = 'if';
+    int = 'int';
+    new = 'new';
+    null = 'null';
+    private = 'private';
+    protected = 'protected';
+    public = 'public';
+    return = 'return';
+    static = 'static';
+    string = 'string';
+    struct = 'struct';
+    this = 'this';
+    true = 'true';
+    while = 'while';
+    void = 'void';
+
+    integer_literal = (zero | non_zero_digit digit*);
+    identifier = (alpha_underscore alpha_numeric_underscore*);
+
+Ignored Tokens
+    white_space,
+    comment;
+
+Productions
+    program = 
+        class_decls;
+    
+    class_decls =
+        class_decls class_decl
+        | {single} class_decl;
+    
+    class_decl =
+        {empty} class_hdr l_brace r_brace
+        | class_hdr l_brace member_decls r_brace;
+    
+    class_hdr =
+        kclass identifier;
+    
+    member_decls =
+        member_decls member
+        | {single} member;
+    
+    member =
+        {field} field
+        | {method} method
+        | {empty} semicolon;
+    
+    field =
+        type identifier semicolon
+        | {initialized} type identifier equal_to expr semicolon
+        | {array} type identifier l_bkt integer_value r_bkt;
+    
+    type =
+        {bool} bool
+        | {char} char
+        | {float} float
+        | {int} int
+        | {string} string;
+    
+    method =
+        method_hdr l_par formals r_par block
+        | {no_param} method_hdr l_par r_par block;
+    
+    method_hdr =
+        {no_return} void identifier
+        | type identifier;
+    
+    formals =
+        formals comma formal
+        | {single} formal;
+    
+    formal =
+        type identifier
+        | {array_type} type identifier l_bkt r_bkt;
+    
+    block =
+        l_brace stmts r_brace
+        | {empty} l_brace r_brace;
+    
+    stmts =
+        {mult} stmts generic_stmt
+        | generic_stmt;
+    
+    condition =
+        l_par expr r_par;
+    
+    stmt =
+        {local_decl} local_decl
+        | {assignment} field_access equal_to expr semicolon
+        | {method_call} method_call semicolon
+        | {return_void} return semicolon
+        | {return_expr} return expr semicolon
+        | {block} block
+        | {while_loop} while condition block
+        | {do_while_loop} do stmts while condition semicolon
+        | {empty} semicolon;
+
+    generic_stmt = 
+        {matched} matched 
+        | {unmatched} unmatched;
+
+    matched = 
+        {if_else} if condition [matched_if_then]:matched else [matched_if_else]:matched
+        | {stmt} stmt;
+
+    unmatched = 
+        {if} if condition generic_stmt
+        | {if_else} if condition [unmatched_if_then]:matched else [unmatched_if_else]:unmatched;
+    
+    local_decl = 
+        type identifier semicolon
+        | {initialized} type identifier equal_to expr semicolon
+        | {array} type identifier l_bkt integer_value r_bkt semicolon;
+    
+    field_access =
+        identifier
+        | {sized_array} identifier l_bkt integer_literal r_bkt
+        | {array} identifier l_bkt r_bkt
+        | {parameterized_array} identifier l_bkt field_access r_bkt
+        | {qualified} identifier dot field_access;
+    
+    method_call =
+        {no_arg} field_access l_par r_par
+        | field_access l_par args r_par;
+    
+    args =
+        {mult} args comma expr
+        | expr;
+    
+    expr =
+        {or} expr or and_expr
+        | {not_an_or} and_expr;
+
+    and_expr =
+        and_expr and equality_expr
+        | {not_an} equality_expr;
+
+    equality_expr =
+        {equals} equality_expr equals comparison_expr
+        | {not_equals} equality_expr not_equals comparison_expr
+        | {not_an} comparison_expr;
+
+    comparison_expr =
+        {less_than} [plus_minus_src]:arith_expr less_than [plus_minus_target]:arith_expr
+        | {greater_than} [plus_minus_src]:arith_expr greater_than [plus_minus_target]:arith_expr
+        | {less_than_or_eq} [plus_minus_src]:arith_expr less_than_or_eq [plus_minus_target]:arith_expr
+        | {greater_than_or_eq} [plus_minus_src]:arith_expr greater_than_or_eq [plus_minus_target]:arith_expr
+        | {not_a} arith_expr;
+
+    arith_expr = 
+        {add} [plus_minus_expr_src]:arith_expr plus [mult_div_mod_target]:fact_expr
+        | {sub} [plus_minus_expr_src]:arith_expr minus [mult_div_mod_target]:fact_expr
+        | {not_an} fact_expr;
+
+    fact_expr =
+        {multiply} [mult_div_mod_expr_src]:fact_expr mult [unitary_target]:unary_expr
+        | {divide} [mult_div_mod_expr_src]:fact_expr div [unitary_target]:unary_expr
+        | {modulo} [mult_div_mod_expr_src]:fact_expr modulo [unitary_target]:unary_expr
+        | {not_a} unary_expr;
+
+    unary_expr = 
+        {not} not unary_expr
+        | {plus} plus unary_expr
+        | {minus} minus unary_expr
+        | {not_a} primary;
+
+    primary =
+        {field} field_access
+        | {method_call} method_call
+        | {int_literal} integer_literal
+        | {char_literal} char_literal
+        | {str_literal} string_literal
+        | {float_literal} float_lit
+        | {true_literal} true
+        | {false_literal} false
+        | {expr} l_par expr r_par;
+
+    integer_value =
+        {numeric} integer_literal
+        | {identifier} identifier;

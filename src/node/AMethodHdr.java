@@ -8,8 +8,7 @@ import analysis.*;
 public final class AMethodHdr extends PMethodHdr
 {
     private PType _type_;
-    private TIdent _ident_;
-    private TLParen _lParen_;
+    private TIdentifier _identifier_;
 
     public AMethodHdr()
     {
@@ -18,15 +17,12 @@ public final class AMethodHdr extends PMethodHdr
 
     public AMethodHdr(
         @SuppressWarnings("hiding") PType _type_,
-        @SuppressWarnings("hiding") TIdent _ident_,
-        @SuppressWarnings("hiding") TLParen _lParen_)
+        @SuppressWarnings("hiding") TIdentifier _identifier_)
     {
         // Constructor
         setType(_type_);
 
-        setIdent(_ident_);
-
-        setLParen(_lParen_);
+        setIdentifier(_identifier_);
 
     }
 
@@ -35,8 +31,7 @@ public final class AMethodHdr extends PMethodHdr
     {
         return new AMethodHdr(
             cloneNode(this._type_),
-            cloneNode(this._ident_),
-            cloneNode(this._lParen_));
+            cloneNode(this._identifier_));
     }
 
     @Override
@@ -70,16 +65,16 @@ public final class AMethodHdr extends PMethodHdr
         this._type_ = node;
     }
 
-    public TIdent getIdent()
+    public TIdentifier getIdentifier()
     {
-        return this._ident_;
+        return this._identifier_;
     }
 
-    public void setIdent(TIdent node)
+    public void setIdentifier(TIdentifier node)
     {
-        if(this._ident_ != null)
+        if(this._identifier_ != null)
         {
-            this._ident_.parent(null);
+            this._identifier_.parent(null);
         }
 
         if(node != null)
@@ -92,32 +87,7 @@ public final class AMethodHdr extends PMethodHdr
             node.parent(this);
         }
 
-        this._ident_ = node;
-    }
-
-    public TLParen getLParen()
-    {
-        return this._lParen_;
-    }
-
-    public void setLParen(TLParen node)
-    {
-        if(this._lParen_ != null)
-        {
-            this._lParen_.parent(null);
-        }
-
-        if(node != null)
-        {
-            if(node.parent() != null)
-            {
-                node.parent().removeChild(node);
-            }
-
-            node.parent(this);
-        }
-
-        this._lParen_ = node;
+        this._identifier_ = node;
     }
 
     @Override
@@ -125,8 +95,7 @@ public final class AMethodHdr extends PMethodHdr
     {
         return ""
             + toString(this._type_)
-            + toString(this._ident_)
-            + toString(this._lParen_);
+            + toString(this._identifier_);
     }
 
     @Override
@@ -139,15 +108,9 @@ public final class AMethodHdr extends PMethodHdr
             return;
         }
 
-        if(this._ident_ == child)
+        if(this._identifier_ == child)
         {
-            this._ident_ = null;
-            return;
-        }
-
-        if(this._lParen_ == child)
-        {
-            this._lParen_ = null;
+            this._identifier_ = null;
             return;
         }
 
@@ -164,15 +127,9 @@ public final class AMethodHdr extends PMethodHdr
             return;
         }
 
-        if(this._ident_ == oldChild)
+        if(this._identifier_ == oldChild)
         {
-            setIdent((TIdent) newChild);
-            return;
-        }
-
-        if(this._lParen_ == oldChild)
-        {
-            setLParen((TLParen) newChild);
+            setIdentifier((TIdentifier) newChild);
             return;
         }
 

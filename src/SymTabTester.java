@@ -1,29 +1,10 @@
 
 import analysis.DepthFirstAdapter;
-import node.AArrayFormal;
-import node.ABooleanType;
-import node.ACharType;
-import node.AClassCommand;
-import node.AEndScopeCommand;
-import node.AFloatType;
-import node.AFormal;
-import node.AIntType;
-import node.ALookup1Command;
-import node.ALookup2Command;
-import node.AMethodHdr;
-import node.AMethodScopeCommand;
-import node.ANewBlockCommand;
-import node.ANewScopeCommand;
-import node.APrintSymtabCommand;
-import node.AProcDeclCommand;
-import node.AStringType;
-import node.AVariableCommand;
-import node.AVoidType;
 
 public class SymTabTester extends DepthFirstAdapter {
 	static SymbolTable symtab = new SymbolTable();
 
-	public void outAClassCommand(AClassCommand node) {
+	/*public void outAClassCommand(AClassCommand node) {
 		if (node.getIdent() != null) {
 			String id = node.getIdent().getText();
 			ClassEntry ce = new ClassEntry(id);
@@ -249,6 +230,6 @@ public class SymTabTester extends DepthFirstAdapter {
 		} else {
 			System.out.println("Invalid formal parameter at line " + node.getIdent().getLine() + ": " + node);
 		}
-	}
+	}*/
 
 }

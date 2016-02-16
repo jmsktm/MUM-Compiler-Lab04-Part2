@@ -1,0 +1,139 @@
+
+
+// ************************ Helpers ************************************
+
+Helpers
+
+    all = [0..0xffff];
+    space  = ' ';
+    lf  = 0x000a;
+    cr  = 0x000d;
+    ff  = 0x000c;
+    ht  = 0x0009;
+
+    new_line = lf | cr | cr lf ;
+    not_cr_lf = [all - [cr + lf]];
+
+    dec_digit = ['0'..'9'];
+
+    esc_seq = '\b' | '\t' | '\n' | '\f' | '\r' | '\"' | '\' ''' | '\\' ;
+
+    not_star = [all - '*'] | cr lf ;
+    not_slash = [all - '/'];
+    not_star_slash = [[all - '/'] - '*'];
+    not_sharp = [all - '#'] | cr lf ;
+
+    ident_letter1 = ['a'..'z'] | ['A'..'Z'] | '_';
+    ident_letter = ident_letter1 | dec_digit;
+
+States
+    normal,
+    sl_comment,
+    ml_comment;
+    
+// ************************ Tokens ***********************************
+
+Tokens
+    white_space 	= (space | ht | ff | new_line)*;
+
+
+// *********************** Comments **********************************
+
+    {normal->sl_comment} single_line_start =	'//' ;
+
+    {sl_comment->normal} sl_comment_end = not_cr_lf* new_line;
+
+
+// ********************** Operators ***********************************
+
+    semicolon		=	';' ;
+    comma		=	',' ;
+    l_paren		=	'(' ;
+    r_paren		=	')' ;
+    l_brack		=	'[' ;
+    r_brack		=	']' ;
+    l_curly		=	'{' ;
+    r_curly		=	'}' ;
+    dot			=	'.' ;
+
+
+// ********************** Keywords *********************************
+
+    new_scope = 'new_scope';
+    end_scope = 'end_scope';
+    lookup1 = 'lookup1';
+    lookup2 = 'lookup2';
+    boolean = 'bool';
+    char = 'char';
+    float = 'float';
+    int = 'int';
+    void = 'void';
+    string = 'string';
+    kclass = 'class'; 
+    method = 'method';
+    variable = 'variable';
+    new_block = 'new_block';
+    enclosing_method = 'enclosing_method';
+    print_symtab = 'print_symtab';
+
+    ident = ident_letter1  ident_letter*;
+
+
+// ********************* Ignored Tokens *****************************
+
+Ignored Tokens
+
+    single_line_start,
+    sl_comment_end,
+
+    white_space; 
+
+// *********************** Productions ******************************
+
+Productions
+
+
+goal
+	= program
+	;
+
+program
+	= command*
+	;
+
+command
+	= {class} kclass  ident  semicolon?
+	| {proc_decl} method method_hdr  formal_list?  r_paren  semicolon?
+	| {variable} variable  type  ident  semicolon?
+	| {lookup1} lookup1  ident  semicolon?
+	| {lookup2} lookup2  [id1]:ident  dot  [id2]:ident  semicolon?
+	| {new_scope} new_scope  ident  semicolon?
+	| {end_scope} end_scope  semicolon?
+	| {method_scope} enclosing_method  semicolon?
+	| {new_block} new_block  semicolon?
+	| {print_symtab} print_symtab  semicolon?
+	;
+
+method_hdr
+	= type  ident  l_paren
+	;
+
+type    
+	= {int} int
+	| {boolean} boolean
+	| {char} char
+	| {string} string
+	| {void} void
+	| {float} float
+	;
+
+formal_list
+	= formal
+	| {multiple} formal_list  comma  formal
+	;
+
+formal 
+	= type  ident
+	| {array} type  ident  l_brack  r_brack
+	;
+

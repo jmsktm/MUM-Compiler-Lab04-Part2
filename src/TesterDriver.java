@@ -24,8 +24,8 @@ public class TesterDriver {
 	    Start tree = p.parse(); 		// Parse the input.
 
 	    System.out.println("Building Symbol Table");
-	    SymTabTester symTabTester = new SymTabTester();
-	    tree.apply(symTabTester);
+	    SymTabBuilder symTabBuilder = new SymTabBuilder();
+	    tree.apply(symTabBuilder);
 	    System.out.println("\n\nFinished Symbol Table\n\n");
 
 	    // System.out.println(symTabTester.symtab);

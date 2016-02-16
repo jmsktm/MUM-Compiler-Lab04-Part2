@@ -2,13 +2,12 @@
 
 package node;
 
-import java.util.*;
 import analysis.*;
 
 @SuppressWarnings("nls")
 public final class AProgram extends PProgram
 {
-    private final LinkedList<PCommand> _command_ = new LinkedList<PCommand>();
+    private PClassDecls _classDecls_;
 
     public AProgram()
     {
@@ -16,10 +15,10 @@ public final class AProgram extends PProgram
     }
 
     public AProgram(
-        @SuppressWarnings("hiding") List<?> _command_)
+        @SuppressWarnings("hiding") PClassDecls _classDecls_)
     {
         // Constructor
-        setCommand(_command_);
+        setClassDecls(_classDecls_);
 
     }
 
@@ -27,7 +26,7 @@ public final class AProgram extends PProgram
     public Object clone()
     {
         return new AProgram(
-            cloneList(this._command_));
+            cloneNode(this._classDecls_));
     }
 
     @Override
@@ -36,45 +35,45 @@ public final class AProgram extends PProgram
         ((Analysis) sw).caseAProgram(this);
     }
 
-    public LinkedList<PCommand> getCommand()
+    public PClassDecls getClassDecls()
     {
-        return this._command_;
+        return this._classDecls_;
     }
 
-    public void setCommand(List<?> list)
+    public void setClassDecls(PClassDecls node)
     {
-        for(PCommand e : this._command_)
+        if(this._classDecls_ != null)
         {
-            e.parent(null);
+            this._classDecls_.parent(null);
         }
-        this._command_.clear();
 
-        for(Object obj_e : list)
+        if(node != null)
         {
-            PCommand e = (PCommand) obj_e;
-            if(e.parent() != null)
+            if(node.parent() != null)
             {
-                e.parent().removeChild(e);
+                node.parent().removeChild(node);
             }
 
-            e.parent(this);
-            this._command_.add(e);
+            node.parent(this);
         }
+
+        this._classDecls_ = node;
     }
 
     @Override
     public String toString()
     {
         return ""
-            + toString(this._command_);
+            + toString(this._classDecls_);
     }
 
     @Override
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._command_.remove(child))
+        if(this._classDecls_ == child)
         {
+            this._classDecls_ = null;
             return;
         }
 
@@ -85,22 +84,10 @@ public final class AProgram extends PProgram
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        for(ListIterator<PCommand> i = this._command_.listIterator(); i.hasNext();)
+        if(this._classDecls_ == oldChild)
         {
-            if(i.next() == oldChild)
-            {
-                if(newChild != null)
-                {
-                    i.set((PCommand) newChild);
-                    newChild.parent(this);
-                    oldChild.parent(null);
-                    return;
-                }
-
-                i.remove();
-                oldChild.parent(null);
-                return;
-            }
+            setClassDecls((PClassDecls) newChild);
+            return;
         }
 
         throw new RuntimeException("Not a child.");

@@ -8,7 +8,7 @@ import analysis.*;
 public final class AFormal extends PFormal
 {
     private PType _type_;
-    private TIdent _ident_;
+    private TIdentifier _identifier_;
 
     public AFormal()
     {
@@ -17,12 +17,12 @@ public final class AFormal extends PFormal
 
     public AFormal(
         @SuppressWarnings("hiding") PType _type_,
-        @SuppressWarnings("hiding") TIdent _ident_)
+        @SuppressWarnings("hiding") TIdentifier _identifier_)
     {
         // Constructor
         setType(_type_);
 
-        setIdent(_ident_);
+        setIdentifier(_identifier_);
 
     }
 
@@ -31,7 +31,7 @@ public final class AFormal extends PFormal
     {
         return new AFormal(
             cloneNode(this._type_),
-            cloneNode(this._ident_));
+            cloneNode(this._identifier_));
     }
 
     @Override
@@ -65,16 +65,16 @@ public final class AFormal extends PFormal
         this._type_ = node;
     }
 
-    public TIdent getIdent()
+    public TIdentifier getIdentifier()
     {
-        return this._ident_;
+        return this._identifier_;
     }
 
-    public void setIdent(TIdent node)
+    public void setIdentifier(TIdentifier node)
     {
-        if(this._ident_ != null)
+        if(this._identifier_ != null)
         {
-            this._ident_.parent(null);
+            this._identifier_.parent(null);
         }
 
         if(node != null)
@@ -87,7 +87,7 @@ public final class AFormal extends PFormal
             node.parent(this);
         }
 
-        this._ident_ = node;
+        this._identifier_ = node;
     }
 
     @Override
@@ -95,7 +95,7 @@ public final class AFormal extends PFormal
     {
         return ""
             + toString(this._type_)
-            + toString(this._ident_);
+            + toString(this._identifier_);
     }
 
     @Override
@@ -108,9 +108,9 @@ public final class AFormal extends PFormal
             return;
         }
 
-        if(this._ident_ == child)
+        if(this._identifier_ == child)
         {
-            this._ident_ = null;
+            this._identifier_ = null;
             return;
         }
 
@@ -127,9 +127,9 @@ public final class AFormal extends PFormal
             return;
         }
 
-        if(this._ident_ == oldChild)
+        if(this._identifier_ == oldChild)
         {
-            setIdent((TIdent) newChild);
+            setIdentifier((TIdentifier) newChild);
             return;
         }
 
