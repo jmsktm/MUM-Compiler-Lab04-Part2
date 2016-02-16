@@ -10,7 +10,7 @@ public class TesterDriver {
     public static void main(String[] args)
     {
 
-	System.out.println("Input file: "+args[0]);
+	// System.out.println("Input file: "+args[0]);
 	try {
 
 	    System.out.println("Starting Lexer");
@@ -28,7 +28,7 @@ public class TesterDriver {
 	    tree.apply(symTabBuilder);
 	    System.out.println("\n\nFinished Symbol Table\n\n");
 
-	    // System.out.println(symTabTester.symtab);
+	    System.out.println(symTabBuilder.getSymtab());
 
 	    System.out.println("End of Symbol Table Builder test");
 

@@ -19,7 +19,6 @@ import node.ADivideFactExpr;
 import node.ADoWhileLoopStmt;
 import node.AEmptyBlock;
 import node.AEmptyClassDecl;
-import node.AEmptyMember;
 import node.AEmptyStmt;
 import node.AEqualsEqualityExpr;
 import node.AExprPrimary;
@@ -47,7 +46,6 @@ import node.ALessThanOrEqComparisonExpr;
 import node.ALocalDecl;
 import node.ALocalDeclStmt;
 import node.AMatchedGenericStmt;
-import node.AMemberDecls;
 import node.AMethod;
 import node.AMethodCall;
 import node.AMethodCallPrimary;
@@ -78,9 +76,7 @@ import node.APlusUnaryExpr;
 import node.AQualifiedFieldAccess;
 import node.AReturnExprStmt;
 import node.AReturnVoidStmt;
-import node.ASingleClassDecls;
 import node.ASingleFormals;
-import node.ASingleMemberDecls;
 import node.ASizedArrayFieldAccess;
 import node.AStmtMatched;
 import node.AStmts;
@@ -146,19 +142,9 @@ public class SymTabBuilder extends DepthFirstAdapter {
 		super.outAClassDecl(node);
 	}*/
 
+	// Entering class scope
 	@Override
-	public void outAClassHdr(AClassHdr node) {
-		String id = node.getId().getText();
-		ClassEntry entry = new ClassEntry(id);
-		if (symtab.insertBinding(entry)) {
-			// success
-			symtab.enterScope(entry);
-		} else
-		{
-			//error message
-			System.out.print("Unsuccessful command at line " + node.getId().getLine() + ": " + node);
-		}
-		
+	public void caseAClassHdr(AClassHdr node) {
 		String identifier = node.getIdentifier().getText();
 		ClassEntry classEntry = new ClassEntry(identifier);
 		
@@ -166,11 +152,22 @@ public class SymTabBuilder extends DepthFirstAdapter {
 		if (bound) {
 			symtab.enterScope(classEntry);
 		} else {
-			
+			printError(node);
 		}
+	}
+	
+	// Exiting class scope
+	@Override
+	public void outAEmptyClassDecl(AEmptyClassDecl node) {
+		symtab.leaveScope();
 	}
 
 	@Override
+	public void outAClassDecl(AClassDecl node) {
+		symtab.leaveScope();
+	}
+
+	/*@Override
 	public void outAMemberDecls(AMemberDecls node) {
 		// TODO Auto-generated method stub
 		super.outAMemberDecls(node);
@@ -180,7 +177,7 @@ public class SymTabBuilder extends DepthFirstAdapter {
 	public void outASingleMemberDecls(ASingleMemberDecls node) {
 		// TODO Auto-generated method stub
 		super.outASingleMemberDecls(node);
-	}
+	}*/
 
 	@Override
 	public void outAFieldMember(AFieldMember node) {
@@ -194,17 +191,17 @@ public class SymTabBuilder extends DepthFirstAdapter {
 		super.outAMethodMember(node);
 	}
 
-	@Override
+	/*@Override
 	public void outAEmptyMember(AEmptyMember node) {
 		// TODO Auto-generated method stub
 		super.outAEmptyMember(node);
-	}
+	}*/
 
-	@Override
+	/*@Override
 	public void outAField(AField node) {
 		// TODO Auto-generated method stub
 		super.outAField(node);
-	}
+	}*/
 
 	@Override
 	public void outAInitializedField(AInitializedField node) {
@@ -220,34 +217,30 @@ public class SymTabBuilder extends DepthFirstAdapter {
 
 	@Override
 	public void outABoolType(ABoolType node) {
-		// TODO Auto-generated method stub
-		super.outABoolType(node);
+		setOut(node, Type.boolVar);
 	}
 
 	@Override
 	public void outACharType(ACharType node) {
-		// TODO Auto-generated method stub
-		super.outACharType(node);
+		setOut(node, Type.charVar);
 	}
 
 	@Override
 	public void outAFloatType(AFloatType node) {
-		// TODO Auto-generated method stub
-		super.outAFloatType(node);
+		setOut(node, Type.floatVar);
 	}
 
 	@Override
 	public void outAIntType(AIntType node) {
-		// TODO Auto-generated method stub
-		super.outAIntType(node);
+		setOut(node, Type.intVar);
 	}
 
 	@Override
 	public void outAStringType(AStringType node) {
-		// TODO Auto-generated method stub
-		super.outAStringType(node);
+		setOut(node, Type.stringVar);
 	}
 
+	//////////////////////////////
 	@Override
 	public void outAMethod(AMethod node) {
 		// TODO Auto-generated method stub
