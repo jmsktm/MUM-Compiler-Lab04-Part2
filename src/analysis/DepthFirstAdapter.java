@@ -2,8 +2,101 @@
 
 package analysis;
 
-import java.util.*;
-import node.*;
+import node.AAddArithExpr;
+import node.AAndExpr;
+import node.AArgs;
+import node.AArrayField;
+import node.AArrayFieldAccess;
+import node.AArrayLocalDecl;
+import node.AArrayTypeFormal;
+import node.AAssignmentStmt;
+import node.ABlock;
+import node.ABlockStmt;
+import node.ABoolType;
+import node.ACharLiteralPrimary;
+import node.ACharType;
+import node.AClassDecl;
+import node.AClassDecls;
+import node.AClassHdr;
+import node.ACondition;
+import node.ADivideFactExpr;
+import node.ADoWhileLoopStmt;
+import node.AEmptyBlock;
+import node.AEmptyClassDecl;
+import node.AEmptyMember;
+import node.AEmptyStmt;
+import node.AEqualsEqualityExpr;
+import node.AExprPrimary;
+import node.AFalseLiteralPrimary;
+import node.AField;
+import node.AFieldAccess;
+import node.AFieldMember;
+import node.AFieldPrimary;
+import node.AFloatLiteralPrimary;
+import node.AFloatType;
+import node.AFormal;
+import node.AFormals;
+import node.AGreaterThanComparisonExpr;
+import node.AGreaterThanOrEqComparisonExpr;
+import node.AIdentifierIntegerValue;
+import node.AIfElseMatched;
+import node.AIfElseUnmatched;
+import node.AIfUnmatched;
+import node.AInitializedField;
+import node.AInitializedLocalDecl;
+import node.AIntLiteralPrimary;
+import node.AIntType;
+import node.ALessThanComparisonExpr;
+import node.ALessThanOrEqComparisonExpr;
+import node.ALocalDecl;
+import node.ALocalDeclStmt;
+import node.AMatchedGenericStmt;
+import node.AMemberDecls;
+import node.AMethod;
+import node.AMethodCall;
+import node.AMethodCallPrimary;
+import node.AMethodCallStmt;
+import node.AMethodHdr;
+import node.AMethodMember;
+import node.AMinusUnaryExpr;
+import node.AModuloFactExpr;
+import node.AMultArgs;
+import node.AMultStmts;
+import node.AMultiplyFactExpr;
+import node.ANoArgMethodCall;
+import node.ANoParamMethod;
+import node.ANoReturnMethodHdr;
+import node.ANotAComparisonExpr;
+import node.ANotAFactExpr;
+import node.ANotAUnaryExpr;
+import node.ANotAnAndExpr;
+import node.ANotAnArithExpr;
+import node.ANotAnEqualityExpr;
+import node.ANotAnOrExpr;
+import node.ANotEqualsEqualityExpr;
+import node.ANotUnaryExpr;
+import node.ANumericIntegerValue;
+import node.AOrExpr;
+import node.AParameterizedArrayFieldAccess;
+import node.APlusUnaryExpr;
+import node.AProgram;
+import node.AQualifiedFieldAccess;
+import node.AReturnExprStmt;
+import node.AReturnVoidStmt;
+import node.ASingleClassDecls;
+import node.ASingleFormals;
+import node.ASingleMemberDecls;
+import node.ASizedArrayFieldAccess;
+import node.AStmtMatched;
+import node.AStmts;
+import node.AStrLiteralPrimary;
+import node.AStringType;
+import node.ASubArithExpr;
+import node.ATrueLiteralPrimary;
+import node.AUnmatchedGenericStmt;
+import node.AWhileLoopStmt;
+import node.Node;
+import node.Start;
 
 public class DepthFirstAdapter extends AnalysisAdapter
 {
@@ -17,12 +110,12 @@ public class DepthFirstAdapter extends AnalysisAdapter
         defaultOut(node);
     }
 
-    public void defaultIn(@SuppressWarnings("unused") Node node)
+    public void defaultIn(Node node)
     {
         // Do nothing
     }
 
-    public void defaultOut(@SuppressWarnings("unused") Node node)
+    public void defaultOut(Node node)
     {
         // Do nothing
     }

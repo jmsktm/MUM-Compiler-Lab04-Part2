@@ -1,91 +1,13 @@
 import analysis.DepthFirstAdapter;
-import node.AAddArithExpr;
-import node.AAndExpr;
-import node.AArgs;
-import node.AArrayField;
-import node.AArrayFieldAccess;
-import node.AArrayLocalDecl;
-import node.AArrayTypeFormal;
-import node.AAssignmentStmt;
-import node.ABlock;
-import node.ABlockStmt;
 import node.ABoolType;
-import node.ACharLiteralPrimary;
 import node.ACharType;
 import node.AClassDecl;
 import node.AClassHdr;
-import node.ACondition;
-import node.ADivideFactExpr;
-import node.ADoWhileLoopStmt;
-import node.AEmptyBlock;
 import node.AEmptyClassDecl;
-import node.AEmptyStmt;
-import node.AEqualsEqualityExpr;
-import node.AExprPrimary;
-import node.AFalseLiteralPrimary;
 import node.AField;
-import node.AFieldAccess;
-import node.AFieldMember;
-import node.AFieldPrimary;
-import node.AFloatLiteralPrimary;
 import node.AFloatType;
-import node.AFormal;
-import node.AFormals;
-import node.AGreaterThanComparisonExpr;
-import node.AGreaterThanOrEqComparisonExpr;
-import node.AIdentifierIntegerValue;
-import node.AIfElseMatched;
-import node.AIfElseUnmatched;
-import node.AIfUnmatched;
-import node.AInitializedField;
-import node.AInitializedLocalDecl;
-import node.AIntLiteralPrimary;
 import node.AIntType;
-import node.ALessThanComparisonExpr;
-import node.ALessThanOrEqComparisonExpr;
-import node.ALocalDecl;
-import node.ALocalDeclStmt;
-import node.AMatchedGenericStmt;
-import node.AMethod;
-import node.AMethodCall;
-import node.AMethodCallPrimary;
-import node.AMethodCallStmt;
-import node.AMethodHdr;
-import node.AMethodMember;
-import node.AMinusUnaryExpr;
-import node.AModuloFactExpr;
-import node.AMultArgs;
-import node.AMultStmts;
-import node.AMultiplyFactExpr;
-import node.ANoArgMethodCall;
-import node.ANoParamMethod;
-import node.ANoReturnMethodHdr;
-import node.ANotAComparisonExpr;
-import node.ANotAFactExpr;
-import node.ANotAUnaryExpr;
-import node.ANotAnAndExpr;
-import node.ANotAnArithExpr;
-import node.ANotAnEqualityExpr;
-import node.ANotAnOrExpr;
-import node.ANotEqualsEqualityExpr;
-import node.ANotUnaryExpr;
-import node.ANumericIntegerValue;
-import node.AOrExpr;
-import node.AParameterizedArrayFieldAccess;
-import node.APlusUnaryExpr;
-import node.AQualifiedFieldAccess;
-import node.AReturnExprStmt;
-import node.AReturnVoidStmt;
-import node.ASingleFormals;
-import node.ASizedArrayFieldAccess;
-import node.AStmtMatched;
-import node.AStmts;
-import node.AStrLiteralPrimary;
 import node.AStringType;
-import node.ASubArithExpr;
-import node.ATrueLiteralPrimary;
-import node.AUnmatchedGenericStmt;
-import node.AWhileLoopStmt;
 import node.Node;
 
 public class SymTabBuilder extends DepthFirstAdapter {
@@ -167,54 +89,6 @@ public class SymTabBuilder extends DepthFirstAdapter {
 		symtab.leaveScope();
 	}
 
-	/*@Override
-	public void outAMemberDecls(AMemberDecls node) {
-		// TODO Auto-generated method stub
-		super.outAMemberDecls(node);
-	}
-
-	@Override
-	public void outASingleMemberDecls(ASingleMemberDecls node) {
-		// TODO Auto-generated method stub
-		super.outASingleMemberDecls(node);
-	}*/
-
-	@Override
-	public void outAFieldMember(AFieldMember node) {
-		// TODO Auto-generated method stub
-		super.outAFieldMember(node);
-	}
-
-	@Override
-	public void outAMethodMember(AMethodMember node) {
-		// TODO Auto-generated method stub
-		super.outAMethodMember(node);
-	}
-
-	/*@Override
-	public void outAEmptyMember(AEmptyMember node) {
-		// TODO Auto-generated method stub
-		super.outAEmptyMember(node);
-	}*/
-
-	/*@Override
-	public void outAField(AField node) {
-		// TODO Auto-generated method stub
-		super.outAField(node);
-	}*/
-
-	@Override
-	public void outAInitializedField(AInitializedField node) {
-		// TODO Auto-generated method stub
-		super.outAInitializedField(node);
-	}
-
-	@Override
-	public void outAArrayField(AArrayField node) {
-		// TODO Auto-generated method stub
-		super.outAArrayField(node);
-	}
-
 	@Override
 	public void outABoolType(ABoolType node) {
 		setOut(node, Type.boolVar);
@@ -238,6 +112,56 @@ public class SymTabBuilder extends DepthFirstAdapter {
 	@Override
 	public void outAStringType(AStringType node) {
 		setOut(node, Type.stringVar);
+	}
+
+	/*@Override
+	public void outASingleMemberDecls(ASingleMemberDecls node) {
+		// TODO Auto-generated method stub
+		super.outASingleMemberDecls(node);
+	}*/
+
+	/*@Override
+	public void outAFieldMember(AFieldMember node) {
+		// TODO Auto-generated method stub
+		super.outAFieldMember(node);
+	}
+
+	@Override
+	public void outAMethodMember(AMethodMember node) {
+		// TODO Auto-generated method stub
+		super.outAMethodMember(node);
+	}*/
+
+	/*@Override
+	public void outAEmptyMember(AEmptyMember node) {
+		// TODO Auto-generated method stub
+		super.outAEmptyMember(node);
+	}*/
+
+	@Override
+	public void outAField(AField node) {
+		String id = node.getIdentifier().getText();
+		Type t = (Type)getOut(node.getType());
+		VariableEntry entry = new VariableEntry(id, t);
+		
+		if (symtab.insertBinding(entry)){
+			//success
+		} else
+		{
+			//error message
+		}
+	}
+
+	/*@Override
+	public void outAInitializedField(AInitializedField node) {
+		// TODO Auto-generated method stub
+		super.outAInitializedField(node);
+	}
+
+	@Override
+	public void outAArrayField(AArrayField node) {
+		// TODO Auto-generated method stub
+		super.outAArrayField(node);
 	}
 
 	//////////////////////////////
@@ -683,7 +607,7 @@ public class SymTabBuilder extends DepthFirstAdapter {
 	public void outAIdentifierIntegerValue(AIdentifierIntegerValue node) {
 		// TODO Auto-generated method stub
 		super.outAIdentifierIntegerValue(node);
-	}
+	}*/
 
 
 	/*@Override
