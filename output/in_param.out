@@ -1,0 +1,22 @@
+Starting Lexer
+Starting Parser
+Building Symbol Table
+
+
+Finished Symbol Table
+
+
+Global Scope: {
+class Main {
+int u[2];
+int v[2];
+int t[2];
+int a;
+int r;
+int mystery(int w, int x[], int y[], int z, int c);
+void main();
+}
+
+}
+
+End of Symbol Table Builder test
