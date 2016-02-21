@@ -14,6 +14,7 @@ import node.AInitializedField;
 import node.AIntType;
 import node.AMethodHdr;
 import node.AMethodMember;
+import node.ANoParamMethod;
 import node.ANoReturnMethodHdr;
 import node.AStringType;
 import node.Node;
@@ -42,12 +43,8 @@ public class SymTabBuilder extends DepthFirstAdapter {
 		String identifier = node.getIdentifier().getText();
 		ClassEntry classEntry = new ClassEntry(identifier);
 		
-		boolean bound = symtab.insertBinding(classEntry);
-		if (bound) {
-			symtab.enterScope(classEntry);
-		} else {
-			printError(node);
-		}
+		symtab.insertBinding(classEntry);
+		symtab.enterScope(classEntry);
 	}
 	
 	// Exiting class scope
@@ -116,11 +113,8 @@ public class SymTabBuilder extends DepthFirstAdapter {
 		String methodName = node.getIdentifier().getText();
 		MethodEntry methodEntry = new MethodEntry(methodName, Type.voidValue);
 		
-		if (symtab.insertBinding(methodEntry)) {
-			symtab.enterScope(methodEntry);
-		} else {
-			printError(node);
-		}
+		symtab.insertBinding(methodEntry);
+		symtab.enterScope(methodEntry);
 	}
 
 	@Override
@@ -129,11 +123,8 @@ public class SymTabBuilder extends DepthFirstAdapter {
 		Type type = (Type)getOut(node.getType());
 		MethodEntry methodEntry = new MethodEntry(methodName, type);
 		
-		if (symtab.insertBinding(methodEntry)) {
-			symtab.enterScope(methodEntry);
-		} else {
-			printError(node);
-		}
+		symtab.insertBinding(methodEntry);
+		symtab.enterScope(methodEntry);
 	}
 
 	@Override
