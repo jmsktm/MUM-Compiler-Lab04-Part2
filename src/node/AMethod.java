@@ -2,7 +2,7 @@
 
 package node;
 
-import analysis.*;
+import analysis.Analysis;
 
 @SuppressWarnings("nls")
 public final class AMethod extends PMethod

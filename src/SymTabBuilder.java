@@ -1,20 +1,22 @@
 import analysis.DepthFirstAdapter;
+import node.AArrayField;
+import node.AArrayTypeFormal;
 import node.ABoolType;
 import node.ACharType;
 import node.AClassDecl;
 import node.AClassHdr;
 import node.AEmptyClassDecl;
 import node.AField;
+import node.AFieldMember;
 import node.AFloatType;
 import node.AFormal;
+import node.AInitializedField;
 import node.AIntType;
-import node.AMethod;
 import node.AMethodHdr;
 import node.AMethodMember;
 import node.ANoReturnMethodHdr;
 import node.AStringType;
 import node.Node;
-import node.PFormals;
 
 public class SymTabBuilder extends DepthFirstAdapter {
 
@@ -89,13 +91,24 @@ public class SymTabBuilder extends DepthFirstAdapter {
 		String id = node.getIdentifier().getText();
 		Type t = (Type)getOut(node.getType());
 		VariableEntry entry = new VariableEntry(id, t);
-		
-		if (symtab.insertBinding(entry)){
-			//success
-		} else
-		{
-			//error message
-		}
+		symtab.insertBinding(entry);
+	}
+
+	@Override
+	public void outAInitializedField(AInitializedField node) {
+		String id = node.getIdentifier().getText();
+		Type t = (Type)getOut(node.getType());
+		VariableEntry entry = new VariableEntry(id, t);
+		symtab.insertBinding(entry);
+	}
+
+	@Override
+	public void outAArrayField(AArrayField node) {
+		String id = node.getIdentifier().getText();
+		Type t = (Type)getOut(node.getType());
+		String size = node.getIntegerValue().toString().trim();
+		VariableEntry entry = new VariableEntry(id, t.makeArrayType(Integer.valueOf(size)));
+		symtab.insertBinding(entry);
 	}
 
 	@Override
@@ -135,7 +148,17 @@ public class SymTabBuilder extends DepthFirstAdapter {
 		VariableEntry variableEntry = new VariableEntry(formalName, type);
 		
 		symtab.insertBinding(variableEntry);
-	}	
+	}
+
+	@Override
+	public void outAArrayTypeFormal(AArrayTypeFormal node) {
+		String formalName = node.getIdentifier().getText();
+		Type type = (Type)getOut(node.getType());
+		int size = type.getArraySize();
+		VariableEntry variableEntry = new VariableEntry(formalName, type.makeArrayType(size));
+		
+		symtab.insertBinding(variableEntry);
+	}
 
 	/*@Override
 	public void outAClassHdr(AClassHdr node) {

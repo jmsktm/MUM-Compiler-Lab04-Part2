@@ -11,6 +11,14 @@ public class VariableEntry extends Entry {
 		// Do not put a semicolon after the variable because sometimes
 		// a variable declaration is followed by a comma, e.g.,
 		// method parameters. Only include the type and identifier name.
-		return this.type().toString() + " " + this.name();
+		
+		String str = this.type().toString() + " " + this.name();
+		if (this.type().isArrayKind()) {
+			int size = this.type().getArraySize();
+			str += "[";
+			if (size > 0) str += size;
+			str += "]";
+		}
+		return str;
 	}
 } // End of class VariableEntry
